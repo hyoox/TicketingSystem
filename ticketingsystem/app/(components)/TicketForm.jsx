@@ -3,17 +3,28 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const TicketForm = () => {
+  const router = useRouter();
   const handleChange = (e) => {
     const value = e.target.value;
     const name = e.target.name;
-    setFormData((preState) => ({
+    setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
 
-  const handleSubmit = () => {
-    console.log("submitted");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const res = await fetch("/api/Tickets", {
+      method: "POST",
+      body: JSON.stringify({ formData }),
+      "content-type": "application/json",
+    });
+    if (!res.ok) {
+      throw new Error("Failed to create Ticket.");
+    }
+    router.refresh();
+    router.push("/");
   };
   const startingTicketData = {
     title: "",
@@ -71,7 +82,7 @@ const TicketForm = () => {
             type="radio"
             onChange={handleChange}
             value={1}
-            checked={formData.priorty == 1}
+            checked={formData.priority == 1}
           />
           <label>1</label>
           <input
@@ -80,7 +91,7 @@ const TicketForm = () => {
             type="radio"
             onChange={handleChange}
             value={2}
-            checked={formData.priorty == 2}
+            checked={formData.priority == 2}
           />
           <label>2</label>
           <input
@@ -89,7 +100,7 @@ const TicketForm = () => {
             type="radio"
             onChange={handleChange}
             value={3}
-            checked={formData.priorty == 3}
+            checked={formData.priority == 3}
           />
           <label>3</label>
           <input
@@ -98,7 +109,7 @@ const TicketForm = () => {
             type="radio"
             onChange={handleChange}
             value={4}
-            checked={formData.priorty == 4}
+            checked={formData.priority == 4}
           />
           <label>4</label>
           <input
@@ -107,7 +118,7 @@ const TicketForm = () => {
             type="radio"
             onChange={handleChange}
             value={5}
-            checked={formData.priorty == 5}
+            checked={formData.priority == 5}
           />
           <label>5</label>
         </div>
